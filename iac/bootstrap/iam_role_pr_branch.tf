@@ -3,7 +3,7 @@ data "aws_iam_policy_document" "pr_branch_assume_role_policy" {
   statement {
     actions = ["sts:AssumeRole"]
     principals {
-      type        = "Service"
+      type = "Service"
       identifiers = [
         "codecatalyst.amazonaws.com",
         "codecatalyst-runner.amazonaws.com"
