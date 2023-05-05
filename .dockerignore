@@ -1,0 +1,7 @@
+target/classes
+target/test-classes
+node_modules/
+iac/
+coverage/
+test-reports/
+.codecatalyst/
