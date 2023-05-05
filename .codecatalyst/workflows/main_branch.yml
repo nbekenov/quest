@@ -48,3 +48,19 @@ Actions:
           Steps:
             - Run: npm ci
             - Run: npx npm test
+        Outputs:
+          AutoDiscoverReports:
+            Enabled: true
+            ReportNamePrefix: backend
+            IncludePaths:
+              - "**/*"
+            SuccessCriteria:
+              PassRate: 100
+              BranchCoverage: 50
+              LineCoverage: 70
+              Vulnerabilities:
+                Severity: CRITICAL
+          Artifacts:
+            - Name: backend
+              Files:
+                - "**/*"
