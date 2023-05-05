@@ -8,7 +8,7 @@ Triggers:
       - master
 
 Actions:
-  Terraform-bootstrap:
+  Terraform-build:
     Identifier: aws/build@v1
     Inputs:
       Sources:
