@@ -28,6 +28,7 @@ function tf_validate {
 
 function run_tflint {
     echo "Runnning tflint ..."
+    tflint --init
     tflint
     exit_code=$?
     if [ $exit_code -ne 0 ]; then
