@@ -63,7 +63,7 @@ Actions:
             - Run: echo $AWS_DEFAULT_REGION
             - Run: REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME
             - Run: echo "Logging in to Amazon ECR..."
-            - Run: $(aws ecr get-login --registry-ids $AWS_ACCOUNT_ID --no-include-email --region $AWS_DEFAULT_REGION)
+            - Run: aws ecr get-login --registry-ids $AWS_ACCOUNT_ID --no-include-email --region $AWS_DEFAULT_REGION
             - Run: docker build -t $REPOSITORY_URI:$IMAGE_VERSION .
         Outputs:
           AutoDiscoverReports:
