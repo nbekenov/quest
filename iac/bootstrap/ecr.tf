@@ -5,6 +5,9 @@ module "ecr" {
   repository_name = var.ecr_name
 
   repository_read_write_access_arns = [data.aws_caller_identity.current.arn]
+  
+  repository_image_tag_mutability = "MUTABLE"
+
   repository_lifecycle_policy = jsonencode({
     rules = [
       {
