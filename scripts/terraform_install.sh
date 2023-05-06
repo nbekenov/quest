@@ -13,4 +13,5 @@ echo "Installing Checkov"
 pip install checkov==${CHECKOV_VERSION}
 echo "============================================================"
 echo "Installing TFLint"
-curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+curl --location https://github.com/terraform-linters/tflint/releases/download/v${TFLINT_VERSION}/tflint_linux_amd64.zip --output tflint.zip && \
+unzip tflint.zip && rm tflint.zip && mv tflint /usr/bin/tflint && chmod +x /usr/bin/tflint
