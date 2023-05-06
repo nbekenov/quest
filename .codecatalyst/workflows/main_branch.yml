@@ -83,7 +83,7 @@ Actions:
               Name: "dev"
         Configuration:
           Steps:
-            - Run: terraform_install.sh
+            - Run: scripts/terraform_install.sh
             - Run: scripts/terraform_plan.sh iac/app_infra dev
         Outputs:
           AutoDiscoverReports:
