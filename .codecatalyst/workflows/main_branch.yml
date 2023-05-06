@@ -66,20 +66,21 @@ Actions:
               Files:
                 - "**/*"
   Create-Infra:
-    create-infra:
-      Compute:
-        Type: EC2
-      Identifier: aws/build@v1
-      DependsOn:
-        - Build
-      Inputs:
-        Sources:
-          - WorkflowSource
-      Environment:
-        Name: dev
-        Connections:
-          - Role: Main-Branch-Infrastructure
-            Name: "dev"
-      Configuration:
-        Steps:
-          - Run: aws sts get-caller-identity
+    DependsOn:
+    - Build
+    Actions:
+      create-infra:
+        Compute:
+          Type: EC2
+        Identifier: aws/build@v1
+        Inputs:
+          Sources:
+            - WorkflowSource
+        Environment:
+          Name: dev
+          Connections:
+            - Role: Main-Branch-Infrastructure
+              Name: "dev"
+        Configuration:
+          Steps:
+            - Run: aws sts get-caller-identity
