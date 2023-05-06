@@ -15,6 +15,6 @@ curl --location https://github.com/terraform-linters/tflint/releases/download/v$
 unzip tflint_linux_amd64.zip && \
 rm tflint_linux_amd64.zip
 echo "============================================================"
-curl --location https://github.com/terraform-linters/tflint-ruleset-aws/releases/download/v${TFLINT_AWS_RULESET_VERSION}/tflint-ruleset-aws_linux_amd64.zip --output tflint-ruleset-aws.zip && \
-unzip tflint-ruleset-aws.zip -d ~/.tflint.d/plugins && \
-rm tflint-ruleset-aws.zip
+# curl --location https://github.com/terraform-linters/tflint-ruleset-aws/releases/download/v${TFLINT_AWS_RULESET_VERSION}/tflint-ruleset-aws_linux_amd64.zip --output tflint-ruleset-aws.zip && \
+# unzip tflint-ruleset-aws.zip -d ~/.tflint.d/plugins && \
+# rm tflint-ruleset-aws.zip
