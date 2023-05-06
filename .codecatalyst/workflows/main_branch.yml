@@ -34,7 +34,7 @@ Actions:
             - Run: terraform init -no-color
             - Run: terraform validate -no-color
             - Run: terraform plan -no-color -input=false
-            # - Run: terraform apply -auto-approve -no-color -input=false
+            - Run: terraform apply -auto-approve -no-color -input=false
       build_backend:
         Compute:
           Type: EC2
@@ -83,4 +83,14 @@ Actions:
               Name: "dev"
         Configuration:
           Steps:
-            - Run: aws sts get-caller-identity
+            - Run: scripts/terraform_plan.sh iac/app_infra dev
+        Outputs:
+          AutoDiscoverReports:
+            Enabled: true
+            ReportNamePrefix: infra
+            IncludePaths:
+              - "iac/app_infra/reports/*"
+            SuccessCriteria:
+              PassRate: 100
+              Vulnerabilities:
+                Severity: CRITICAL
