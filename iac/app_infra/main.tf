@@ -27,7 +27,7 @@ module "ecs_cluster" {
 
       container_definitions = {
         (local.container_name) = {
-          image     = "${data.aws_caller_identity.current.account_id}.dkr.ecr.${data.aws_region.current.name}.amazonaws.com/test:quest"
+          image     = "${data.aws_caller_identity.current.account_id}.dkr.ecr.${data.aws_region.current.name}.amazonaws.com/quest:latest"
           essential = true
           port_mappings = [
             {
