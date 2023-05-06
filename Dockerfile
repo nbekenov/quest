@@ -21,4 +21,4 @@ HEALTHCHECK --interval=30s --timeout=3s \
   CMD curl --fail http://localhost:3000/ || exit 1
 
 # Start the application
-ENTRYPOINT ["node", "app.js"]
+CMD ["npm", "start"]
