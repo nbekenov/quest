@@ -1,6 +1,6 @@
 locals {
   dev = {
-    profile     = "dev"
+    profile     = "default"
     region      = "us-east-1"
     environment = "dev"
   }

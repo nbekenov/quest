@@ -5,6 +5,5 @@ terraform {
     key            = "app-infra-state-file/terraform.tfstate"
     encrypt        = "true"
     dynamodb_table = "terraform-state"
-    profile        = "dev"
   }
 }
