@@ -1,45 +1,73 @@
-# # cluster
-# module "ecs_cluster" {
-#   source  = "terraform-aws-modules/ecs/aws"
-#   version = "5.0.1"
+# cluster
+module "ecs_cluster" {
+  source  = "terraform-aws-modules/ecs/aws"
+  version = "5.0.1"
 
-#   cluster_name = "${local.config["environment"]}-${var.application_name}"
+  cluster_name = "${local.config["environment"]}-${var.application_name}"
 
-#   cluster_configuration = {
-#     execute_command_configuration = {
-#       logging = "OVERRIDE"
-#       log_configuration = {
-#         cloud_watch_log_group_name = "/aws/ecs/aws-ec2"
-#       }
-#     }
-#   }
+  # Capacity provider
+  fargate_capacity_providers = {
+    FARGATE = {
+      default_capacity_provider_strategy = {
+        weight = 1
+        base   = 1
+      }
+    }
+    FARGATE_SPOT = {
+      default_capacity_provider_strategy = {
+        weight = 4
+      }
+    }
+  }
+  # FargateService
+  services = {
+    quest-frontend = {
+      cpu    = 1024
+      memory = 4096
 
-#   # Capacity provider
-#   fargate_capacity_providers = {
-#     FARGATE = {
-#       default_capacity_provider_strategy = {
-#         weight = 50
-#         base   = 20
-#       }
-#     }
-#     FARGATE_SPOT = {
-#       default_capacity_provider_strategy = {
-#         weight = 50
-#       }
-#     }
-#   }
+      container_definitions = {
+        (local.container_name) = {
+          image     = "XXXXXXX.dkr.ecr.us-east-1.amazonaws.com/test:quest"
+          essential = true
+          port_mappings = [
+            {
+              name          = local.container_name
+              containerPort = local.container_port
+              hostPort      = local.container_port
+              protocol      = "tcp"
+            }
+          ]
+        }
+      }
+      load_balancer = {
+        service = {
+          target_group_arn = element(module.alb.target_group_arns, 0)
+          container_name   = local.container_name
+          container_port   = local.container_port
+        }
+      }
+      subnet_ids = module.vpc.private_subnets
+      security_group_rules = {
+        alb_ingress_3000 = {
+          type                     = "ingress"
+          from_port                = local.container_port
+          to_port                  = local.container_port
+          protocol                 = "tcp"
+          description              = "Service port"
+          source_security_group_id = module.alb_sg.security_group_id
+        }
+        egress_all = {
+          type        = "egress"
+          from_port   = 0
+          to_port     = 0
+          protocol    = "-1"
+          cidr_blocks = ["0.0.0.0/0"]
+        }
+      }
 
-# }
+    }
+  }
+}
 
-
-# # TaskDefinition
-# # rFargateService
-
-
-# # ecs execution role - # An IAM Role for the Fargate agent to make AWS API calls on your behalf
-
-# # ecs task role - # An IAM role to control permissions for the containers in your tasks
-
-# # SG "allow egress from everywhere" and "allow connections from ALB"
 
 
