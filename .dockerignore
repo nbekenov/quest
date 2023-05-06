@@ -2,6 +2,7 @@ target/classes
 target/test-classes
 node_modules/
 iac/
+scripts/
 coverage/
 test-reports/
 .codecatalyst/

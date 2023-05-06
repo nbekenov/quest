@@ -1,0 +1,9 @@
+download-external-modules: true
+evaluate-variables: true
+external-modules-download-path: .external_modules
+framework: terraform
+output: cli
+skip-check:
+  - CKV2_AWS_12
+  - CKV2_AWS_19
+  - CKV2_AWS_11

@@ -22,7 +22,10 @@ Actions:
           Connections:
             - Role: Main-Branch-Infrastructure
               Name: "dev"
-        Configuration: 
+        Configuration:
+          # Container:
+          #   Registry: registry
+          #   Image: image
           Steps:
             - Run: export TF_VERSION=1.3.7 && wget -O terraform.zip "https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip"
             - Run: unzip terraform.zip && rm terraform.zip && mv terraform /usr/bin/terraform && chmod +x /usr/bin/terraform
@@ -62,3 +65,20 @@ Actions:
             - Name: backend
               Files:
                 - "**/*"
+  Create-Infra:
+    Actions:
+      create-infra:
+        Compute:
+          Type: EC2
+        Identifier: aws/build@v1
+        Inputs:
+          Sources:
+            - WorkflowSource
+        Environment:
+          Name: dev
+          Connections:
+            - Role: Main-Branch-Infrastructure
+              Name: "dev"
+        Configuration:
+          Steps:
+            - Run: aws sts get-caller-identity
