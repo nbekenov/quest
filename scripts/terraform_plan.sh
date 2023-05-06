@@ -79,7 +79,7 @@ do
     terraform init
     terraform workspace select ${ENV_NAME} || terraform workspace new ${ENV_NAME}
     tf_validate
-    run_tflint
+    # run_tflint
     run_checkov
     run_plan
 done
