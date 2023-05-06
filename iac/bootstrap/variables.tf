@@ -13,6 +13,11 @@ variable "state_file_lock_table_name" {
   default = "terraform-state"
 }
 
+variable "ecr_name" {
+  type    = string
+  default = "quest"
+}
+
 variable "default_tags" {
   type = map(string)
   default = {
