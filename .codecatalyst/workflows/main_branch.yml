@@ -71,6 +71,8 @@ Actions:
         Compute:
           Type: EC2
         Identifier: aws/build@v1
+        DependsOn:
+          - Build
         Inputs:
           Sources:
             - WorkflowSource
