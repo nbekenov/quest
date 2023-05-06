@@ -38,8 +38,8 @@ module "ecs_cluster" {
             }
           ]
           secrets = [
-            { 
-              name = "SECRET_WORD"
+            {
+              name      = "SECRET_WORD"
               valueFrom = "arn:aws:secretsmanager:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:secret:quest_secret_word"
             }
           ]
