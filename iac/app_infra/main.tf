@@ -37,6 +37,12 @@ module "ecs_cluster" {
               protocol      = "tcp"
             }
           ]
+          secrets = [
+            { 
+              name = "SECRET_WORD"
+              valueFrom = "arn:aws:secretsmanager:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:secret:quest_secret_word"
+            }
+          ]
         }
       }
       load_balancer = {
