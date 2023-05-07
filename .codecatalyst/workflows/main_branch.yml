@@ -36,7 +36,7 @@ Actions:
                 Vulnerabilities:
                   Severity: HIGH
                   Number: 0
-      terraform-bootstrap:
+      bootstrap:
         Compute:
           Type: EC2
         Identifier: aws/build@v1
@@ -61,7 +61,7 @@ Actions:
             - Run: terraform validate -no-color
             - Run: terraform plan -no-color -input=false
             - Run: terraform apply -auto-approve -no-color -input=false
-      build_backend:
+      build-app:
         Compute:
           Type: EC2
         Identifier: aws/build@v1
@@ -96,14 +96,14 @@ Actions:
               Vulnerabilities:
                 Severity: CRITICAL
           Artifacts:
-            - Name: backend
+            - Name: build
               Files:
                 - "**/*"
   Package:
     DependsOn:
     - Build
     Actions:
-      create-infra:
+      build-image:
         Compute:
           Type: EC2
         Identifier: aws/build@v1
@@ -131,7 +131,26 @@ Actions:
             - Run: echo "Logging in to Amazon ECR..."
             - Run: aws ecr get-login-password --region $AWS_DEFAULT_REGION  | docker login --username AWS --password-stdin $REPOSITORY_URI
             - Run: docker build -t $REPOSITORY_URI:$IMAGE_VERSION .
+            - name: Run Trivy vulnerability scanner
+              uses: aquasecurity/trivy-action@master
+              with:
+                image-ref: $REPOSITORY_URI:$IMAGE_VERSION 
+                format: 'table'
+                exit-code: '1'
+                ignore-unfixed: true
+                vuln-type: 'os,library'
+                severity: 'CRITICAL,HIGH'
             - Run: docker push $REPOSITORY_URI:$IMAGE_VERSION 
+        Outputs:
+          AutoDiscoverReports:
+            Enabled: true
+            ReportNamePrefix: build
+            IncludePaths:
+              - "**/*"
+            SuccessCriteria:
+              PassRate: 100
+              Vulnerabilities:
+                Severity: CRITICAL
   Deploy:
     DependsOn:
     - Package
