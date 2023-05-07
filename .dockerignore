@@ -6,3 +6,6 @@ scripts/
 coverage/
 test-reports/
 .codecatalyst/
+.dockerignore
+README.md
+Dockerfile
