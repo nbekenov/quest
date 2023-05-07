@@ -181,7 +181,7 @@ Actions:
           Steps:
             - Run: scripts/terraform_install.sh
             - Run: scripts/terraform_plan.sh iac/app_infra dev
-            - Run: terraform apply plan.out
+            - Run: cd iac/app_infra && terraform apply plan.out
         Outputs:
           AutoDiscoverReports:
             Enabled: true
