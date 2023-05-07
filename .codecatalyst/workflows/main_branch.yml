@@ -149,7 +149,7 @@ Actions:
                 docker push $REPOSITORY_URI:$IMAGE_VERSION 
         Outputs:
           Reports:
-            SCA:
+            image-vulnerability-scan:
               Format: SARIFSCA
               IncludePaths:
                 - report.sarif
