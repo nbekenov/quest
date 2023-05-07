@@ -55,7 +55,7 @@ function run_checkov {
 
 function run_plan {
     echo "## TERRAFORM PLAN : Generate the Terraform Plan"
-    terraform plan -out plan.out
+    terraform plan -no-color -out plan.out
     exit_code=$?
     if [ $exit_code -ne 0 ]; then
         echo "terraform plan command failed with exit code ${exit_code}."
