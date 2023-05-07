@@ -181,10 +181,11 @@ Actions:
           Steps:
             - Run: scripts/terraform_install.sh
             - Run: scripts/terraform_plan.sh iac/app_infra dev
+            - Run: terraform apply plan.out --auto-approve
         Outputs:
           AutoDiscoverReports:
             Enabled: true
-            ReportNamePrefix: infra
+            ReportNamePrefix: checkov
             IncludePaths:
               - "iac/app_infra/reports/*"
             SuccessCriteria:
