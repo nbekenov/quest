@@ -5,7 +5,7 @@
   "main": "src/000.js",
   "scripts": {
     "lint": "eslint '**/*.js'",
-    "build": "npm run lint && tsc",
+    "build": "npm run lint",
     "start": "node src/000.js",
     "test": "npx jest --passWithNoTests --all"
   },
