@@ -131,7 +131,8 @@ Actions:
               uses: aquasecurity/trivy-action@master
               with:
                 image-ref: 'quest:vulnscan'
-                format: 'table'
+                format: sarif
+                output: report.sarif
                 exit-code: '1'
                 ignore-unfixed: true
                 vuln-type: 'os,library'
@@ -146,25 +147,16 @@ Actions:
                 aws ecr get-login-password --region $AWS_DEFAULT_REGION  | docker login --username AWS --password-stdin $REPOSITORY_URI
                 docker build -t $REPOSITORY_URI:$IMAGE_VERSION .
                 docker push $REPOSITORY_URI:$IMAGE_VERSION 
-
-            # - Run: AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
-            # - Run: echo $AWS_ACCOUNT_ID
-            # - Run: echo $AWS_DEFAULT_REGION
-            # - Run: REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME
-            # - Run: echo "Logging in to Amazon ECR..."
-            # - Run: aws ecr get-login-password --region $AWS_DEFAULT_REGION  | docker login --username AWS --password-stdin $REPOSITORY_URI
-            # - Run: docker build -t $REPOSITORY_URI:$IMAGE_VERSION .
-            # - Run: docker push $REPOSITORY_URI:$IMAGE_VERSION 
         Outputs:
-          AutoDiscoverReports:
-            Enabled: true
-            ReportNamePrefix: build
-            IncludePaths:
-              - "**/*"
-            SuccessCriteria:
-              PassRate: 100
-              Vulnerabilities:
-                Severity: CRITICAL
+          Reports:
+            SCA:
+              Format: SARIFSCA
+              IncludePaths:
+                - report.sarif
+              SuccessCriteria:
+                Vulnerabilities:
+                  Severity: HIGH
+                  Number: 0
           Artifacts:
             - Name: package
               Files:
