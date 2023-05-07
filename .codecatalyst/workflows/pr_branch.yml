@@ -1,11 +1,12 @@
-# Adaptation of the https://developer.hashicorp.com/terraform/tutorials/automation/github-actions workflow
-Name: MainBranch
+Name: OnPullRequest
 SchemaVersion: "1.0"
-
 Triggers:
-  - Type: Push
+  - Type: PULLREQUEST
     Branches:
       - master
+    Events:
+      - OPEN
+      - REVISION
 
 Actions:
   Build:
@@ -36,31 +37,6 @@ Actions:
                 Vulnerabilities:
                   Severity: HIGH
                   Number: 0
-      bootstrap:
-        Compute:
-          Type: EC2
-        Identifier: aws/build@v1
-        Inputs:
-          Sources:
-            - WorkflowSource
-        Environment:
-          Name: dev
-          Connections:
-            - Role: Main-Branch-Infrastructure
-              Name: "dev"
-        Configuration:
-          # Container:
-          #   Registry: registry
-          #   Image: image
-          Steps:
-            - Run: export TF_VERSION=1.3.7 && wget -O terraform.zip "https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip"
-            - Run: unzip terraform.zip && rm terraform.zip && mv terraform /usr/bin/terraform && chmod +x /usr/bin/terraform
-            - Run: cd iac/bootstrap
-            - Run: terraform fmt -check -no-color
-            - Run: terraform init -no-color
-            - Run: terraform validate -no-color
-            - Run: terraform plan -no-color -input=false
-            - Run: terraform apply -auto-approve -no-color -input=false
       build-app:
         Compute:
           Type: EC2
@@ -99,11 +75,11 @@ Actions:
             - Name: build
               Files:
                 - "**/*"
-  Package:
+  Scan-Image:
     DependsOn:
     - Build
     Actions:
-      build-image:
+      Scan-image:
         Compute:
           Type: EC2
         Identifier: aws/github-actions-runner@v1
@@ -137,16 +113,6 @@ Actions:
                 ignore-unfixed: true
                 vuln-type: 'os,library'
                 severity: 'CRITICAL,HIGH'
-            - name: Push image into ECR
-              run: |
-                AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
-                echo $AWS_ACCOUNT_ID
-                echo $AWS_DEFAULT_REGION
-                REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME
-                echo "Logging in to Amazon ECR..."
-                aws ecr get-login-password --region $AWS_DEFAULT_REGION  | docker login --username AWS --password-stdin $REPOSITORY_URI
-                docker build -t $REPOSITORY_URI:$IMAGE_VERSION .
-                docker push $REPOSITORY_URI:$IMAGE_VERSION 
         Outputs:
           Reports:
             image-vulnerability-scan:
@@ -161,11 +127,11 @@ Actions:
             - Name: package
               Files:
                 - "**/*"
-  Deploy:
+  Infra:
     DependsOn:
     - Package
     Actions:
-      create-infra:
+      create-infra-plan:
         Compute:
           Type: EC2
         Identifier: aws/build@v1
@@ -181,7 +147,6 @@ Actions:
           Steps:
             - Run: scripts/terraform_install.sh
             - Run: scripts/terraform_plan.sh iac/app_infra dev
-            - Run: cd iac/app_infra && terraform apply plan.out
         Outputs:
           AutoDiscoverReports:
             Enabled: true
