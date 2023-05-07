@@ -10,7 +10,7 @@ Triggers:
 Actions:
   Build:
     Actions:
-      SCA:
+      SCA: # Software composition analysis
         Identifier: aws/github-actions-runner@v1
         Inputs:
           Sources:
@@ -21,7 +21,7 @@ Actions:
               uses: aquasecurity/trivy-action@master
               with:
                 scan-type: fs
-                scan-ref: './src, ./bin'
+                scan-ref: './src'
                 ignore-unfixed: true
                 format: sarif
                 output: report.sarif
