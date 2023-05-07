@@ -129,7 +129,7 @@ Actions:
                 - "**/*"
   Infra:
     DependsOn:
-    - Package
+    - Scan-Image
     Actions:
       create-infra-plan:
         Compute:
