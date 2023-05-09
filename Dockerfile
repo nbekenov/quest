@@ -1,5 +1,8 @@
 # Use an official Node.js runtime as a parent image
-FROM node:16.17.0-bullseye-slim
+FROM node:20-bullseye-slim
+
+# set the current mode
+ENV NODE_ENV=production
 
 # Set the working directory to /app
 WORKDIR /usr/src/app
