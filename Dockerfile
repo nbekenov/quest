@@ -1,5 +1,5 @@
 # Use an official Node.js runtime as a parent image
-FROM node:20-bullseye-slim
+FROM node:20-alpine
 
 # set the current mode
 ENV NODE_ENV=production
