@@ -1,24 +1,19 @@
 # Use an official Node.js runtime as a parent image
-FROM node:20
+FROM node:16.17.0-bullseye-slim
 
 # Set the working directory to /app
-WORKDIR /app
+WORKDIR /usr/src/app
 
-# Copy the package.json and package-lock.json files to the container
-COPY package*.json ./
+# Copy the application code to the container
+COPY --chown=node:node . .
 
 # Install the dependencies
-RUN npm ci
-
-# Copy the rest of the application code to the container
-COPY . .
+RUN npm ci --only=production
 
 # Expose the port that your application listens on
 EXPOSE 3000
 
-# healthcheck to ensure that the application is running properly
-HEALTHCHECK --interval=30s --timeout=3s \
-  CMD curl --fail http://localhost:3000/ || exit 1
+USER node
 
 # Start the application
-CMD ["npm", "start"]
+CMD ["node", "src/000.js"]
